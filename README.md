@@ -10,12 +10,13 @@ and benchmarked CPU vs. GPU. Built stage by stage while learning C++ along the w
       pretrained MNIST classifier. (96.8% test accuracy, matching the numpy
       reference model.)
 - [x] **Stage 2 — Make it fast**: cache-friendly matmul + multithreading, benchmarked.
-      (512x512 matmul: 254ms naive -> 11.0ms cache-friendly (23x) -> 2.9ms
-      threaded on 12 cores (88x). See `results/benchmarks.csv`.)
+      (512x512 matmul: 255ms naive -> 10.9ms cache-friendly (23x) -> 2.7ms
+      threaded on 12 cores (93x). See `results/benchmarks.csv`.)
 - [x] **Stage 3 — CUDA port**: matmul kernel on GPU, CPU vs. GPU timings.
-      (512x512 matmul: 1.0ms on a Colab T4 GPU vs. 254ms naive CPU — 248x, and
-      ~300x vs. a single-threaded CPU reference run in the same program.
-      Validated on a cloud GPU since this machine has none — see
+      (512x512 matmul: ~0.77ms on a Colab T4 GPU vs. 255ms naive CPU — ~333x
+      (averaged across 3 runs, which ranged 0.63-1.0ms due to Colab's shared
+      GPU hardware; consistently ~300x vs. a single-threaded CPU reference in
+      every run). Validated on a cloud GPU since this machine has none — see
       `stage3_cuda/README.md`.)
 - [ ] **Stage 4 — Stretch: tiny language model** (llama2.c-style), only if time allows.
 
