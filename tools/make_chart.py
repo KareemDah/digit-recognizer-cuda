@@ -1,6 +1,9 @@
 """
-Reads results/benchmarks.csv (written by stage2_fast/benchmark.cpp) and
-renders a speedup chart to results/speedup_chart.png for the README.
+Reads results/cpu_benchmarks.csv (written by stage2_fast/benchmark.cpp) and
+results/gpu_benchmarks.csv (hand-maintained, from Colab runs of
+stage3_cuda/matmul.cu -- kept in a separate file specifically so re-running
+the CPU benchmark can never overwrite it), and renders a combined speedup
+chart to results/speedup_chart.png for the README.
 
 Run after stage2_benchmark.exe: `python tools/make_chart.py`
 """
@@ -12,7 +15,8 @@ import matplotlib.pyplot as plt
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 RESULTS_DIR = os.path.join(SCRIPT_DIR, "..", "results")
-CSV_PATH = os.path.join(RESULTS_DIR, "benchmarks.csv")
+CPU_CSV_PATH = os.path.join(RESULTS_DIR, "cpu_benchmarks.csv")
+GPU_CSV_PATH = os.path.join(RESULTS_DIR, "gpu_benchmarks.csv")
 OUT_PATH = os.path.join(RESULTS_DIR, "speedup_chart.png")
 
 LABELS = {
@@ -40,12 +44,13 @@ def label_for(variant, threads):
     return f"threaded ({threads}t)"
 
 
+def read_csv(path):
+    with open(path, newline="") as f:
+        return list(csv.DictReader(f))
+
+
 def main():
-    rows = []
-    with open(CSV_PATH, newline="") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            rows.append(row)
+    rows = read_csv(CPU_CSV_PATH) + read_csv(GPU_CSV_PATH)
 
     # de-dupe/keep last "threaded" row with the highest thread count as the
     # headline "max threads" bar (avoids double-plotting 2t/4t/12t if the

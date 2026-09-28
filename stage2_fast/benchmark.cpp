@@ -85,7 +85,11 @@ int main() {
     }
     cout << "correctness OK\n\n";
 
-    ofstream csv("results/benchmarks.csv");
+    // Written separately from results/gpu_benchmarks.csv (which the CUDA
+    // run's number lives in) so that re-running this CPU benchmark can
+    // never overwrite the GPU number -- they're two different programs on
+    // two different machines, so they get two different files.
+    ofstream csv("results/cpu_benchmarks.csv");
     csv << "variant,threads,size,time_ms\n";
 
     double naive_ms = best_of_ms([&] { Matrix r = Matrix::multiply(a, b); }, repeats);
@@ -104,6 +108,6 @@ int main() {
         csv << "threaded," << t << "," << n << "," << ms << "\n";
     }
 
-    cout << "\nwrote results/benchmarks.csv\n";
+    cout << "\nwrote results/cpu_benchmarks.csv\n";
     return 0;
 }

@@ -11,7 +11,7 @@ and benchmarked CPU vs. GPU. Built stage by stage while learning C++ along the w
       reference model.)
 - [x] **Stage 2 — Make it fast**: cache-friendly matmul + multithreading, benchmarked.
       (512x512 matmul: 255ms naive -> 10.9ms cache-friendly (23x) -> 2.7ms
-      threaded on 12 cores (93x). See `results/benchmarks.csv`.)
+      threaded on 12 cores (93x). See `results/cpu_benchmarks.csv`.)
 - [x] **Stage 3 — CUDA port**: matmul kernel on GPU, CPU vs. GPU timings.
       (512x512 matmul: ~0.77ms on a Colab T4 GPU vs. 255ms naive CPU — ~333x
       (averaged across 3 runs, which ranged 0.63-1.0ms due to Colab's shared
@@ -43,13 +43,18 @@ python tools/train_export.py
 
 ![matmul speedup: naive vs cache-friendly vs threaded vs GPU](results/speedup_chart.png)
 
-Raw numbers in `results/benchmarks.csv`. Regenerate the CPU-side numbers with:
+Raw numbers live in two separate files, on purpose:
+
+- `results/cpu_benchmarks.csv` — overwritten every time you run
+  `stage2_benchmark.exe`.
+- `results/gpu_benchmarks.csv` — hand-maintained, updated only when a new
+  Colab run of `stage3_cuda/matmul.cu` (see `stage3_cuda/README.md`) gives a
+  new number. Kept separate specifically so re-running the CPU benchmark can
+  never wipe out the GPU result.
+
+Regenerate the chart (reads both files) with:
 
 ```
 ./build/stage2_fast/stage2_benchmark.exe
 python tools/make_chart.py
 ```
-
-The GPU number comes from running `stage3_cuda/matmul.cu` on a cloud GPU (see
-`stage3_cuda/README.md`) and is appended to `results/benchmarks.csv` by hand,
-since it's a separate program running on separate hardware.
