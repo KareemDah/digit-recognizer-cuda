@@ -1,0 +1,23 @@
+# Build output
+build/
+*.o
+*.obj
+*.exe
+*.exp
+*.lib
+*.pdb
+
+# Large data files (regenerate with tools/train_export.py)
+data/*.ubyte
+data/*.gz
+data/weights.bin
+data/test_images.bin
+data/test_labels.bin
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editor
+.vscode/
