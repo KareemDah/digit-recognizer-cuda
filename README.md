@@ -52,9 +52,11 @@ Raw numbers live in two separate files, on purpose:
   new number. Kept separate specifically so re-running the CPU benchmark can
   never wipe out the GPU result.
 
-Regenerate the chart (reads both files) with:
+Regenerate the CPU-side numbers and redraw the chart in one step with:
 
 ```
-./build/stage2_fast/stage2_benchmark.exe
-python tools/make_chart.py
+./refresh_benchmarks.ps1
 ```
+
+(builds, runs `stage2_benchmark.exe`, then `tools/make_chart.py` — so the
+chart can't go stale from forgetting the second step.)
