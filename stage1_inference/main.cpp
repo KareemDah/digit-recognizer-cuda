@@ -3,6 +3,8 @@
 #include "matrix.hpp"
 #include "mnist_loader.hpp"
 
+using namespace std;
+
 namespace {
 
 int predict(const MlpWeights& weights, const Matrix& image) {
@@ -24,22 +26,21 @@ int main() {
     TestSet test_set = load_test_set("data/test_set.bin");
 
     int correct = 0;
-    for (std::size_t i = 0; i < test_set.images.size(); ++i) {
+    for (size_t i = 0; i < test_set.images.size(); ++i) {
         int predicted = predict(weights, test_set.images[i]);
         int actual = test_set.labels[i];
         if (predicted == actual) {
             ++correct;
         }
         if (i < 10) {
-            std::cout << "image " << i << ": predicted=" << predicted
-                      << " actual=" << actual << (predicted == actual ? "" : "  <-- wrong")
-                      << "\n";
+            cout << "image " << i << ": predicted=" << predicted << " actual=" << actual
+                 << (predicted == actual ? "" : "  <-- wrong") << "\n";
         }
     }
 
     double accuracy = static_cast<double>(correct) / static_cast<double>(test_set.images.size());
-    std::cout << "\naccuracy: " << correct << "/" << test_set.images.size() << " = " << accuracy
-              << "\n";
+    cout << "\naccuracy: " << correct << "/" << test_set.images.size() << " = " << accuracy
+         << "\n";
 
     return 0;
 }

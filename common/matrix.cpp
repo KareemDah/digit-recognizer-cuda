@@ -4,19 +4,21 @@
 #include <cmath>
 #include <stdexcept>
 
+using namespace std;
+
 Matrix::Matrix(std::size_t rows, std::size_t cols)
     : rows_(rows), cols_(cols), data_(rows * cols, 0.0f) {}
 
 float& Matrix::at(std::size_t row, std::size_t col) {
     if (row >= rows_ || col >= cols_) {
-        throw std::out_of_range("Matrix::at index out of range");
+        throw out_of_range("Matrix::at index out of range");
     }
     return data_[row * cols_ + col];
 }
 
 float Matrix::at(std::size_t row, std::size_t col) const {
     if (row >= rows_ || col >= cols_) {
-        throw std::out_of_range("Matrix::at index out of range");
+        throw out_of_range("Matrix::at index out of range");
     }
     return data_[row * cols_ + col];
 }
@@ -25,7 +27,7 @@ float Matrix::at(std::size_t row, std::size_t col) const {
 // for cache-friendliness — this version is the "before" baseline.
 Matrix Matrix::multiply(const Matrix& a, const Matrix& b) {
     if (a.cols_ != b.rows_) {
-        throw std::invalid_argument("Matrix::multiply: shape mismatch");
+        throw invalid_argument("Matrix::multiply: shape mismatch");
     }
     Matrix result(a.rows_, b.cols_);
     for (std::size_t i = 0; i < a.rows_; ++i) {
@@ -42,7 +44,7 @@ Matrix Matrix::multiply(const Matrix& a, const Matrix& b) {
 
 void Matrix::add_in_place(const Matrix& other) {
     if (rows_ != other.rows_ || cols_ != other.cols_) {
-        throw std::invalid_argument("Matrix::add_in_place: shape mismatch");
+        throw invalid_argument("Matrix::add_in_place: shape mismatch");
     }
     for (std::size_t i = 0; i < data_.size(); ++i) {
         data_[i] += other.data_[i];
@@ -51,18 +53,18 @@ void Matrix::add_in_place(const Matrix& other) {
 
 void Matrix::relu_in_place() {
     for (float& v : data_) {
-        v = std::max(0.0f, v);
+        v = max(0.0f, v);
     }
 }
 
 void Matrix::softmax_row_in_place() {
     if (rows_ != 1) {
-        throw std::invalid_argument("Matrix::softmax_row_in_place: expected a single row");
+        throw invalid_argument("Matrix::softmax_row_in_place: expected a single row");
     }
-    float max_val = *std::max_element(data_.begin(), data_.end());
+    float max_val = *max_element(data_.begin(), data_.end());
     float sum = 0.0f;
     for (float& v : data_) {
-        v = std::exp(v - max_val);
+        v = exp(v - max_val);
         sum += v;
     }
     for (float& v : data_) {
@@ -72,8 +74,8 @@ void Matrix::softmax_row_in_place() {
 
 int Matrix::argmax_row() const {
     if (rows_ != 1) {
-        throw std::invalid_argument("Matrix::argmax_row: expected a single row");
+        throw invalid_argument("Matrix::argmax_row: expected a single row");
     }
-    auto it = std::max_element(data_.begin(), data_.end());
-    return static_cast<int>(std::distance(data_.begin(), it));
+    auto it = max_element(data_.begin(), data_.end());
+    return static_cast<int>(distance(data_.begin(), it));
 }

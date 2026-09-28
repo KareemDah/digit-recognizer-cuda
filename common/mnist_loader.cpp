@@ -4,17 +4,19 @@
 #include <fstream>
 #include <stdexcept>
 
+using namespace std;
+
 namespace {
 
-std::ifstream open_binary(const std::string& path) {
-    std::ifstream file(path, std::ios::binary);
+ifstream open_binary(const string& path) {
+    ifstream file(path, ios::binary);
     if (!file) {
-        throw std::runtime_error("could not open file: " + path);
+        throw runtime_error("could not open file: " + path);
     }
     return file;
 }
 
-uint32_t read_u32(std::ifstream& file) {
+uint32_t read_u32(ifstream& file) {
     uint32_t value = 0;
     file.read(reinterpret_cast<char*>(&value), sizeof(value));
     return value;
@@ -23,7 +25,7 @@ uint32_t read_u32(std::ifstream& file) {
 }  // namespace
 
 MlpWeights load_weights(const std::string& path) {
-    std::ifstream file = open_binary(path);
+    ifstream file = open_binary(path);
 
     uint32_t input_dim = read_u32(file);
     uint32_t hidden_dim = read_u32(file);
@@ -45,7 +47,7 @@ MlpWeights load_weights(const std::string& path) {
 }
 
 TestSet load_test_set(const std::string& path) {
-    std::ifstream file = open_binary(path);
+    ifstream file = open_binary(path);
 
     uint32_t count = read_u32(file);
     uint32_t image_dim = read_u32(file);
