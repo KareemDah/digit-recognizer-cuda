@@ -1,6 +1,6 @@
 variant,threads,size,time_ms
-naive,1,512,253.817
-cache_friendly,1,512,10.8768
-threaded,2,512,6.761
-threaded,4,512,4.4638
-threaded,12,512,2.6282
+naive,1,512,257.116
+cache_friendly,1,512,10.9109
+threaded,2,512,7.1458
+threaded,4,512,4.0561
+threaded,12,512,3.4969
