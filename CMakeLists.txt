@@ -4,5 +4,7 @@ project(digit_recognizer LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Stage subdirectories are added here as we build them.
-# add_subdirectory(stage1_inference)
+add_subdirectory(common)
+add_subdirectory(stage1_inference)
+
+# Further stage subdirectories are added here as we build them.
