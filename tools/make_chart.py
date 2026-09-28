@@ -20,9 +20,11 @@ LABELS = {
     ("cache_friendly", "1"): "cache-friendly",
     ("threaded", "2"): "threaded (2t)",
     ("threaded", "4"): "threaded (4t)",
+    ("cuda_gpu", "1"): "GPU (CUDA)",
 }
 
 BLUE = "#2a78d6"
+ORANGE = "#eb6834"
 SURFACE = "#fcfcfb"
 PRIMARY_INK = "#0b0b0b"
 SECONDARY_INK = "#52514e"
@@ -57,16 +59,17 @@ def main():
     times = list(seen_labels.values())
     baseline = times[0]
     speedups = [baseline / t for t in times]
+    colors = [ORANGE if label == "GPU (CUDA)" else BLUE for label in labels]
 
-    fig, ax = plt.subplots(figsize=(8, 5), facecolor=SURFACE)
+    fig, ax = plt.subplots(figsize=(9, 5), facecolor=SURFACE)
     ax.set_facecolor(SURFACE)
 
-    bars = ax.bar(labels, times, color=BLUE, width=0.55, zorder=3)
+    bars = ax.bar(labels, times, color=colors, width=0.55, zorder=3)
 
     ax.set_yscale("log")
     ax.set_ylabel("time (ms, log scale)", color=SECONDARY_INK)
-    ax.set_title("512x512 matmul: naive vs. cache-friendly vs. threaded", color=PRIMARY_INK,
-                 fontsize=13, pad=16)
+    ax.set_title("512x512 matmul: naive -> cache-friendly -> threaded -> GPU",
+                 color=PRIMARY_INK, fontsize=13, pad=16)
 
     ax.grid(axis="y", color=GRIDLINE, linewidth=0.8, zorder=0)
     ax.spines[["top", "right", "left"]].set_visible(False)
@@ -75,7 +78,8 @@ def main():
     ax.tick_params(axis="y", colors=MUTED)
 
     for bar, t, s in zip(bars, times, speedups):
-        label = f"{t:.1f} ms" if s == 1.0 else f"{t:.1f} ms ({s:.0f}x)"
+        time_str = f"{t:.2f} ms" if t < 1 else f"{t:.1f} ms"
+        label = time_str if s == 1.0 else f"{time_str} ({s:.0f}x)"
         ax.text(bar.get_x() + bar.get_width() / 2, t * 1.15, label, ha="center", va="bottom",
                 color=PRIMARY_INK, fontsize=9)
 
