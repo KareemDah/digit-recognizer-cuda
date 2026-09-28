@@ -9,6 +9,8 @@
 #include <random>
 #include <vector>
 
+using namespace std;
+
 // __global__ marks this as a "kernel": a function that runs on the GPU
 // (device), launched from CPU (host) code, executed once per thread.
 __global__ void matmul_kernel(const float* a, const float* b, float* c, int n) {
@@ -31,8 +33,8 @@ __global__ void matmul_kernel(const float* a, const float* b, float* c, int n) {
 // Same naive matmul as common/matrix.cpp's Matrix::multiply, but running
 // here on the CPU host so we have a trusted reference to check the GPU
 // result against -- same principle as Stage 2's correctness check.
-void matmul_cpu_reference(const std::vector<float>& a, const std::vector<float>& b,
-                           std::vector<float>& c, int n) {
+void matmul_cpu_reference(const vector<float>& a, const vector<float>& b, vector<float>& c,
+                           int n) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             float sum = 0.0f;
@@ -59,9 +61,9 @@ int main() {
     const size_t bytes = static_cast<size_t>(n) * n * sizeof(float);
 
     // Host-side (CPU) data -- same random matrices as Stage 2's benchmark.
-    std::vector<float> h_a(n * n), h_b(n * n), h_c(n * n), h_reference(n * n);
-    std::mt19937 rng(42);
-    std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+    vector<float> h_a(n * n), h_b(n * n), h_c(n * n), h_reference(n * n);
+    mt19937 rng(42);
+    uniform_real_distribution<float> dist(-1.0f, 1.0f);
     for (int i = 0; i < n * n; ++i) {
         h_a[i] = dist(rng);
         h_b[i] = dist(rng);
@@ -126,7 +128,7 @@ int main() {
     matmul_cpu_reference(h_a, h_b, h_reference, n);
     float max_abs_diff = 0.0f;
     for (int i = 0; i < n * n; ++i) {
-        max_abs_diff = std::max(max_abs_diff, std::fabs(h_c[i] - h_reference[i]));
+        max_abs_diff = max(max_abs_diff, fabs(h_c[i] - h_reference[i]));
     }
     printf("correctness check -- max abs diff vs CPU reference: %f\n", max_abs_diff);
     if (max_abs_diff > 1e-2f) {
@@ -142,10 +144,10 @@ int main() {
     // a direct CPU-vs-GPU comparison in this one program.
     double cpu_ms = -1.0;
     for (int i = 0; i < repeats; ++i) {
-        auto cpu_start = std::chrono::steady_clock::now();
+        auto cpu_start = chrono::steady_clock::now();
         matmul_cpu_reference(h_a, h_b, h_reference, n);
-        auto cpu_end = std::chrono::steady_clock::now();
-        double ms = std::chrono::duration<double, std::milli>(cpu_end - cpu_start).count();
+        auto cpu_end = chrono::steady_clock::now();
+        double ms = chrono::duration<double, milli>(cpu_end - cpu_start).count();
         if (cpu_ms < 0.0 || ms < cpu_ms) {
             cpu_ms = ms;
         }

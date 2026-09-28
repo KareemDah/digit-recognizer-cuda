@@ -6,17 +6,17 @@
 
 using namespace std;
 
-Matrix::Matrix(std::size_t rows, std::size_t cols)
+Matrix::Matrix(size_t rows, size_t cols)
     : rows_(rows), cols_(cols), data_(rows * cols, 0.0f) {}
 
-float& Matrix::at(std::size_t row, std::size_t col) {
+float& Matrix::at(size_t row, size_t col) {
     if (row >= rows_ || col >= cols_) {
         throw out_of_range("Matrix::at index out of range");
     }
     return data_[row * cols_ + col];
 }
 
-float Matrix::at(std::size_t row, std::size_t col) const {
+float Matrix::at(size_t row, size_t col) const {
     if (row >= rows_ || col >= cols_) {
         throw out_of_range("Matrix::at index out of range");
     }
@@ -30,10 +30,10 @@ Matrix Matrix::multiply(const Matrix& a, const Matrix& b) {
         throw invalid_argument("Matrix::multiply: shape mismatch");
     }
     Matrix result(a.rows_, b.cols_);
-    for (std::size_t i = 0; i < a.rows_; ++i) {
-        for (std::size_t j = 0; j < b.cols_; ++j) {
+    for (size_t i = 0; i < a.rows_; ++i) {
+        for (size_t j = 0; j < b.cols_; ++j) {
             float sum = 0.0f;
-            for (std::size_t k = 0; k < a.cols_; ++k) {
+            for (size_t k = 0; k < a.cols_; ++k) {
                 sum += a.data_[i * a.cols_ + k] * b.data_[k * b.cols_ + j];
             }
             result.data_[i * result.cols_ + j] = sum;
@@ -46,7 +46,7 @@ void Matrix::add_in_place(const Matrix& other) {
     if (rows_ != other.rows_ || cols_ != other.cols_) {
         throw invalid_argument("Matrix::add_in_place: shape mismatch");
     }
-    for (std::size_t i = 0; i < data_.size(); ++i) {
+    for (size_t i = 0; i < data_.size(); ++i) {
         data_[i] += other.data_[i];
     }
 }

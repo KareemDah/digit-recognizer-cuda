@@ -1,7 +1,7 @@
 variant,threads,size,time_ms
-naive,1,512,238.98
-cache_friendly,1,512,10.8308
-threaded,2,512,6.1538
-threaded,4,512,5.3456
-threaded,12,512,2.8848
+naive,1,512,254.975
+cache_friendly,1,512,10.8256
+threaded,2,512,6.9919
+threaded,4,512,3.7405
+threaded,12,512,2.5824
 cuda_gpu,1,512,0.627040

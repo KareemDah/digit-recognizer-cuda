@@ -24,7 +24,7 @@ uint32_t read_u32(ifstream& file) {
 
 }  // namespace
 
-MlpWeights load_weights(const std::string& path) {
+MlpWeights load_weights(const string& path) {
     ifstream file = open_binary(path);
 
     uint32_t input_dim = read_u32(file);
@@ -46,7 +46,7 @@ MlpWeights load_weights(const std::string& path) {
     return weights;
 }
 
-TestSet load_test_set(const std::string& path) {
+TestSet load_test_set(const string& path) {
     ifstream file = open_binary(path);
 
     uint32_t count = read_u32(file);
